@@ -1,65 +1,81 @@
-set nocompatible
-filetype off
+set nocompatible              " be iMproved, required
+filetype off                  " required
+set pyxversion=0
 
+execute pathogen#infect()
+syntax on 
+filetype plugin indent on
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-" call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-" Plugin 'Valloric/YouCompleteMe'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'rip-rip/clang_complete'
-Plugin 'godlygeek/tabular'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'ervandew/supertab'
-Plugin 'rust-lang/rust.vim'
-Plugin 'racer-rust/vim-racer'
-
+" call plug#begin('~/.vim/plugged')
+" Plug 'scrooloose/nerdtree'
+" Plug 'altercation/vim-colors-solarized'
+" Plug 'ervandew/supertab'
+" Plug 'rip-rip/clang_complete'
+" Plug 'scrooloose/syntastic'
+" Plug 'davidhalter/jedi-vim'
+" Plug 'keith/swift.vim'
+" Plug 'rust-lang/rust.vim'
+" Plug 'racer-rust/vim-racer'
+" Plug 'flazz/vim-colorschemes'
+" Plug 'vim-erlang/vim-erlang-runtime'
+" Plug 'vim-erlang/vim-erlang-omnicomplete'
+" Plug 'vim-erlang/vim-erlang-compiler'
+" Plug 'vim-erlang/vim-erlang-tags'
+" Plug 'sudar/vim-arduino-syntax'
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+" call plug#end()            " required
 
-" To ignore plugin indent changes, instead use:
-" filetype plugin on
-"
-"  Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-let g:ycm_global_ycm_extra_conf = '/usr/share/vim/vimfiles/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
-let g:clang_library_path='/usr/lib/libclang.so.5.0'
+let g:ycm_global_ycm_extra_conf = ''
 
-map <C-m> :NERDTreeToggle<CR>
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
-syntax enable
+" runtime macros/matchit.vim
+set term=xterm-256color
+
+colorscheme one
 set background=dark
-colorscheme solarized
+let g:one_allow_italics =1 
+set t_8b=^[[48;2;%lu;%lu;%lum
+set t_8f=^[[38;2;%lu;%lu;%lum
+
+map <C-m> :NERDTreeToggle<C-n>
+
+" Settings for Clang
+let s:clang_library_path='/Library/Developer/CommandLineTools/usr/lib'
+if isdirectory(s:clang_library_path)
+    let g:clang_library_path=s:clang_library_path
+endif
+
+" Settings for rust
 set hidden
-let g:racer_experimental_completer =1
-let g:rustfmt_autosave = 1
-let g:racer_cmd = "/usr/bin"
-let g:rust_clip_command = 'xclip -selection clipboard'
-let g:solarized_termcolors=256
-let g:multi_cursor_next_key='<C-n>'
-let g:multi_cursor_prev_key='<C-p>'
-let g:multi_cursor_skip_key='<C-x>'
-let g:multi_cursor_quit_key='<Esc>'
-let g:multi_cursor_start_key='<F6>'
+let g:racer_cmd = "/Users/robert/.cargo/bin"
+let g:racer_experimental_completer = 1
+let g:syntastic_rust_checkers = ['cargo']
+
+" The shiftwidth() function is relatively new.                                            
+" Don't require it to exist.                                                              
+if exists('*shiftwidth')                                                                  
+  func s:sw()
+    return shiftwidth()                                                                   
+  endfunc                                                                                 
+else
+  func s:sw()
+    return &shiftwidth                                                                    
+  endfunc                                                                                 
+endif
+
 set mouse=a
 set number
 set tabstop=4
 set expandtab
-set shiftwidth=4 
+set shiftwidth=4
+set backspace=indent,eol,start
+set clipboard=unnamed
+
